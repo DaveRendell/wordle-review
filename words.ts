@@ -2318,7 +2318,7 @@ export const possibleAnswers = [
 	"artsy",
 	"rural",
 	"shave"
-]
+].sort()
     
 export const possibleGuesses = [
     "aahed",

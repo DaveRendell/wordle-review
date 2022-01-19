@@ -1,4 +1,6 @@
 import readline from "readline"
+import compareWords from "./compareWords"
+import filterWordListFromGuess from "./filterWordListFromGuess"
 import { possibleAnswers, possibleGuesses } from "./words"
 
 const readlinePrompt = readline.createInterface({
@@ -15,19 +17,6 @@ function prompt(question: string): Promise<string> {
         }
     })
 }
-
-function compareWords(first: string, second: string): string {
-    return Array.from(second).map((letter, index) => {
-        if (first[index] == letter) {
-            return "🟩"
-        }
-        if (first.includes(letter)) {
-            return "🟨"
-        }
-        return "⬛"
-    }).join("")
-}
-
 function summariseRemainingWords(remainingAnswers: string[], remainingGuesses: string[]) {
     const answers = remainingAnswers.length
     const words = remainingGuesses.length + answers
@@ -37,18 +26,17 @@ function summariseRemainingWords(remainingAnswers: string[], remainingGuesses: s
     }
 }
 
-
 async function main() {
     const correctAnswer = await prompt("What was the correct answer?\n")
-    let remainingAnswers = [...possibleAnswers].sort() // Sort in case of possible spoilers
+    let remainingAnswers = [...possibleAnswers]
     let remainingWords = [...possibleGuesses]
     summariseRemainingWords(remainingAnswers, remainingWords)
     for (let i = 1; i <= 6; i++) {
         const guess = await prompt(`Enter your guess number ${i}: `)
         const result = compareWords(correctAnswer, guess)
         console.log(result)
-        remainingAnswers = remainingAnswers.filter(answer => compareWords(answer, guess) == result)
-        remainingWords = remainingWords.filter(word => compareWords(word, guess) == result)
+        remainingAnswers = filterWordListFromGuess(guess, result, remainingAnswers)
+        remainingWords = filterWordListFromGuess(guess, result, remainingWords)
         summariseRemainingWords(remainingAnswers, remainingWords)
     }
     return
