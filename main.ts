@@ -39,7 +39,6 @@ async function main() {
         remainingWords = filterWordListFromGuess(guess, result, remainingWords)
         summariseRemainingWords(remainingAnswers, remainingWords)
     }
-    return
 }
 
-main()
+main().then(() => process.exit(0)) // 😬
