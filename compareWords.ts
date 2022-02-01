@@ -4,6 +4,10 @@ export default function compareWords(first: string, second: string): string {
             return "🟩"
         }
         if (first.includes(letter)) {
+            const indexOfMatchingLetter = first.indexOf(letter)
+            if (Array.from(second)[indexOfMatchingLetter] == letter) {
+                return "⬛"
+            }
             return "🟨"
         }
         return "⬛"
